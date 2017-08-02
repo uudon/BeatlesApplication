@@ -62,10 +62,9 @@ public class HttpUtil {
             Log.e(TAG, e.toString());
         }
     }
-    public static String requestPost(HashMap<String, String> paramsMap) {
+    public static String requestPost(String requestUrl, HashMap<String, String> paramsMap) {
         String result = null;
         try {
-            String baseUrl = "http://f.apiplus.net/qxc-20.json";
             //合成参数
             StringBuilder tempParams = new StringBuilder();
             int pos = 0;
@@ -80,7 +79,7 @@ public class HttpUtil {
             // 请求的参数转换为byte数组
             byte[] postData = params.getBytes();
             // 新建一个URL对象
-            URL url = new URL(baseUrl);
+            URL url = new URL(requestUrl);
             // 打开一个HttpURLConnection连接
             HttpURLConnection urlConn = (HttpURLConnection) url.openConnection();
             // 设置连接超时时间

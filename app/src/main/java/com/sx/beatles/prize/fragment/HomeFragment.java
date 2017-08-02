@@ -16,8 +16,8 @@ import com.sx.beatles.prize.R;
 import com.sx.beatles.prize.adapter.MainDataAdapter;
 import com.sx.beatles.prize.base.BaseFragment;
 import com.sx.beatles.prize.bean.Prize;
-import com.sx.beatles.prize.net.HttpUtil;
-import com.sx.beatles.prize.util.AsyncTaskUtil;
+import com.sx.beatles.prize.net.RequestCallBack;
+import com.sx.beatles.prize.util.ContantsUrl;
 import com.sx.beatles.prize.util.pref.CommonPreferences;
 
 import java.util.ArrayList;
@@ -49,12 +49,10 @@ public class HomeFragment extends BaseFragment {
     @Override
     protected void loadData() {
         mPrizeInfoList = new ArrayList<>();
-        ArrayList<Prize> info = getParseData();
-        if(info != null){
-            mPrizeInfoList.addAll(info);
-        }
-        mMainDataAdapter = new MainDataAdapter(getActivity());
-        mMainDataAdapter.addAll(mPrizeInfoList);
+
+        mMainDataAdapter = new MainDataAdapter(mContext);
+
+        addList();
 
         mLRecyclerViewAdapter = new LRecyclerViewAdapter(mMainDataAdapter);
 
@@ -67,48 +65,43 @@ public class HomeFragment extends BaseFragment {
         mLRecyclerView.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh() {
-                requestData();
+                requestData(mRequestCallBack, ContantsUrl.PRIZE_OPEN_CODE, new HashMap<String, String>());
             }
         });
     }
 
-    private void requestData() {
-        doAsync(null, new AsyncTaskUtil.CallDoInBackground<String>() {
-            @Override
-            public String call() throws Exception {
-                return HttpUtil.requestPost(new HashMap<String, String>());
+    private RequestCallBack mRequestCallBack = new RequestCallBack() {
+        @Override
+        public void onSuccess(String result) {
+            JSONObject jsonObject = JSON.parseObject(result);
+            if(jsonObject == null){
+                return;
             }
-        }, new AsyncTaskUtil.CallPost<String>() {
-            @Override
-            public void onCallPost(String value) {
-                if(TextUtils.isEmpty(value)) {
-                    Toast.makeText(mContext,"解析data数据为空",Toast.LENGTH_LONG).show();
-                    return;
-                }
-                JSONObject jsonObject = JSON.parseObject(value);
-                if(jsonObject == null){
-                    return;
-                }
-                String data = jsonObject.getString("data");
-                if(TextUtils.isEmpty(data)){
-                    Toast.makeText(mContext,"解析data数据为空",Toast.LENGTH_LONG).show();
-                    return;
-                }
-                CommonPreferences.getInstance().setKeyPrizeInfo(data);//存在来，做缓存
-
-                if(!mPrizeInfoList.isEmpty()){
-                    mPrizeInfoList.clear();
-                }
-                ArrayList<Prize> info = getParseData();
-                if(info != null){
-                    mPrizeInfoList.addAll(info);
-                }
-
-                mMainDataAdapter.addAll(mPrizeInfoList);
-                mLRecyclerViewAdapter.notifyDataSetChanged();
-                mLRecyclerView.refreshComplete(20);
+            String data = jsonObject.getString("data");
+            if(TextUtils.isEmpty(data)){
+                return;
             }
-        });
+            CommonPreferences.getInstance().setKeyPrizeInfo(data);//存在来，做缓存
+            mPrizeInfoList.clear();
+            addList();
+            mLRecyclerViewAdapter.notifyDataSetChanged();
+            mLRecyclerView.refreshComplete(20);
+        }
+
+        @Override
+        public void onFail(String errorMessage) {
+            Toast.makeText(mContext,errorMessage,Toast.LENGTH_LONG).show();
+        }
+    };
+    /**
+     * 将元素加到列表
+     */
+    private void addList() {
+        ArrayList<Prize> info = getParseData();
+        if(info != null){
+            mPrizeInfoList.addAll(info);
+            mMainDataAdapter.addAll(mPrizeInfoList);
+        }
     }
 
     private ArrayList<Prize> getParseData(){
