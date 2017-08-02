@@ -16,7 +16,6 @@ import com.sx.beatles.prize.R;
 import com.sx.beatles.prize.adapter.MainDataAdapter;
 import com.sx.beatles.prize.base.BaseFragment;
 import com.sx.beatles.prize.bean.Prize;
-import com.sx.beatles.prize.bean.PrizeInfo;
 import com.sx.beatles.prize.net.HttpUtil;
 import com.sx.beatles.prize.util.AsyncTaskUtil;
 import com.sx.beatles.prize.util.pref.CommonPreferences;
@@ -33,7 +32,7 @@ public class HomeFragment extends BaseFragment {
     private Context mContext = null;
     private LRecyclerView mLRecyclerView;
     private LRecyclerViewAdapter mLRecyclerViewAdapter = null;
-    private ArrayList<PrizeInfo> mPrizeInfos;
+    private ArrayList<Prize> mPrizeInfoList;
     private MainDataAdapter mMainDataAdapter;
 
     @Override
@@ -49,13 +48,13 @@ public class HomeFragment extends BaseFragment {
 
     @Override
     protected void loadData() {
-        mPrizeInfos = new ArrayList<>();
-        ArrayList<PrizeInfo> info = getParseData();
+        mPrizeInfoList = new ArrayList<>();
+        ArrayList<Prize> info = getParseData();
         if(info != null){
-            mPrizeInfos.addAll(info);
+            mPrizeInfoList.addAll(info);
         }
         mMainDataAdapter = new MainDataAdapter(getActivity());
-        mMainDataAdapter.addAll(mPrizeInfos);
+        mMainDataAdapter.addAll(mPrizeInfoList);
 
         mLRecyclerViewAdapter = new LRecyclerViewAdapter(mMainDataAdapter);
 
@@ -97,38 +96,33 @@ public class HomeFragment extends BaseFragment {
                 }
                 CommonPreferences.getInstance().setKeyPrizeInfo(data);//存在来，做缓存
 
-                if(!mPrizeInfos.isEmpty()){
-                    mPrizeInfos.clear();
+                if(!mPrizeInfoList.isEmpty()){
+                    mPrizeInfoList.clear();
                 }
-                ArrayList<PrizeInfo> info = getParseData();
+                ArrayList<Prize> info = getParseData();
                 if(info != null){
-                    mPrizeInfos.addAll(info);
+                    mPrizeInfoList.addAll(info);
                 }
 
-                mMainDataAdapter.addAll(mPrizeInfos);
+                mMainDataAdapter.addAll(mPrizeInfoList);
                 mLRecyclerViewAdapter.notifyDataSetChanged();
                 mLRecyclerView.refreshComplete(20);
             }
         });
     }
 
-    private ArrayList<PrizeInfo> getParseData(){
+    private ArrayList<Prize> getParseData(){
         String data = CommonPreferences.getInstance().getKeyPrizeInfo();
         if(TextUtils.isEmpty(data)){
             Toast.makeText(mContext,"缓存为空",Toast.LENGTH_LONG).show();
             return null;
         }
-        ArrayList<PrizeInfo> infos = new ArrayList<>();
+        ArrayList<Prize> infoList = new ArrayList<>();
         JSONArray jsonArray = JSON.parseArray(data);
         for(int i = 0 ; i < jsonArray.size(); i++){
-            PrizeInfo prizeInfo = new PrizeInfo();
-
             Prize prize = JSON.parseObject(jsonArray.get(i).toString(),Prize.class);
-            prizeInfo.setIssue(prize.getExpect());
-            prizeInfo.setPrizeTime(prize.getOpentime());
-            prizeInfo.setPrizeNumber(prize.getOpencode());
-            infos.add(prizeInfo);
+            infoList.add(prize);
         }
-        return infos;
+        return infoList;
     }
 }

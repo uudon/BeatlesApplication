@@ -1,19 +1,16 @@
 package com.sx.beatles.prize;
 
 import android.databinding.DataBindingUtil;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.view.Window;
 
 import com.sx.beatles.prize.adapter.MainFragmentViewPagerAdapter;
 import com.sx.beatles.prize.databinding.ActivityMainBinding;
 import com.sx.beatles.prize.fragment.HomeFragment;
-import com.sx.beatles.prize.net.HttpUtil;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 
 public class MainActivity extends AppCompatActivity {

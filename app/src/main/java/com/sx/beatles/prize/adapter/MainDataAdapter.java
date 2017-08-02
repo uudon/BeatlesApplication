@@ -3,17 +3,16 @@ package com.sx.beatles.prize.adapter;
 import android.content.Context;
 import android.util.Log;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.sx.beatles.prize.R;
 import com.sx.beatles.prize.base.ListBaseAdapter;
 import com.sx.beatles.prize.base.SuperViewHolder;
-import com.sx.beatles.prize.bean.PrizeInfo;
+import com.sx.beatles.prize.bean.Prize;
 
 /**
  * Created by 施行 on 2017/8/1.
  */
-public class MainDataAdapter extends ListBaseAdapter<PrizeInfo> {
+public class MainDataAdapter extends ListBaseAdapter<Prize> {
     private Context mContext;
     public MainDataAdapter(Context context) {
         super(context);
@@ -27,9 +26,9 @@ public class MainDataAdapter extends ListBaseAdapter<PrizeInfo> {
 
     @Override
     public void onBindItemHolder(SuperViewHolder holder, int position) {
-        PrizeInfo prizeInfo = mDataList.get(position);
+        Prize prize = mDataList.get(position);
 
-        TextView issue = holder.getView(R.id.prize_issue);
+        TextView expect = holder.getView(R.id.prize_expect);
         TextView time = holder.getView(R.id.prize_time);
 
         TextView number1 = holder.getView(R.id.prize_number_1);
@@ -40,14 +39,14 @@ public class MainDataAdapter extends ListBaseAdapter<PrizeInfo> {
         TextView number6 = holder.getView(R.id.prize_number_6);
         TextView number7 = holder.getView(R.id.prize_number_7);
 
-        String expect = mContext.getResources().getString(R.string.expect);
-        String formatExpect = String.format(expect,prizeInfo.getIssue());
-        time.setText(prizeInfo.getPrizeTime());
-        issue.setText(formatExpect);
+        String expectStr = mContext.getResources().getString(R.string.expect);
+        String formatExpect = String.format(expectStr,prize.getExpect());
+        time.setText(prize.getOpentime());
+        expect.setText(formatExpect);
         //char [] chars = prizeInfo.getPrizeNumber().toCharArray();
         //if(chars.length < 7) return;
 
-        String [] prizeNumber = prizeInfo.getPrizeNumber().split(",");
+        String [] prizeNumber = prize.getOpencode().split(",");
         if(prizeNumber == null || prizeNumber.length < 7){
             Log.e("tyb","prizeNumber为空或者元素小于7");
             return;
