@@ -6,7 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
-import com.sx.beatles.prize.adapter.MainFragmentViewPagerAdapter;
+import com.sx.beatles.prize.adapter.FragmentViewPagerAdapter;
 import com.sx.beatles.prize.databinding.ActivityMainBinding;
 import com.sx.beatles.prize.fragment.HomeFragment;
 
@@ -17,7 +17,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding mMainBinding;
     private ViewPager mViewPager;
-    private MainFragmentViewPagerAdapter mAdapter;
+    private FragmentViewPagerAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<Fragment> fragments = new ArrayList<>();
         fragments.add(new HomeFragment());
 
-        mAdapter = new MainFragmentViewPagerAdapter(getSupportFragmentManager(),fragments);
+        mAdapter = new FragmentViewPagerAdapter(getSupportFragmentManager(),fragments);
 
         mViewPager.setAdapter(mAdapter);
     }

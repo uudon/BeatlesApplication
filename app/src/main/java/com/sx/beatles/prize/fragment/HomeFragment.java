@@ -13,7 +13,7 @@ import com.gdobe.myrecyclerview.interfaces.OnRefreshListener;
 import com.gdobe.myrecyclerview.recyclerview.LRecyclerView;
 import com.gdobe.myrecyclerview.recyclerview.LRecyclerViewAdapter;
 import com.sx.beatles.prize.R;
-import com.sx.beatles.prize.adapter.MainDataAdapter;
+import com.sx.beatles.prize.adapter.PrizeDataAdapter;
 import com.sx.beatles.prize.base.BaseFragment;
 import com.sx.beatles.prize.bean.Prize;
 import com.sx.beatles.prize.net.RequestCallBack;
@@ -33,7 +33,7 @@ public class HomeFragment extends BaseFragment {
     private LRecyclerView mLRecyclerView;
     private LRecyclerViewAdapter mLRecyclerViewAdapter = null;
     private ArrayList<Prize> mPrizeInfoList;
-    private MainDataAdapter mMainDataAdapter;
+    private PrizeDataAdapter mPrizeDataAdapter;
 
     @Override
     protected int setContentView() {
@@ -50,11 +50,11 @@ public class HomeFragment extends BaseFragment {
     protected void loadData() {
         mPrizeInfoList = new ArrayList<>();
 
-        mMainDataAdapter = new MainDataAdapter(mContext);
+        mPrizeDataAdapter = new PrizeDataAdapter(mContext);
 
         addList();
 
-        mLRecyclerViewAdapter = new LRecyclerViewAdapter(mMainDataAdapter);
+        mLRecyclerViewAdapter = new LRecyclerViewAdapter(mPrizeDataAdapter);
 
         mLRecyclerView.setAdapter(mLRecyclerViewAdapter);
 
@@ -100,7 +100,7 @@ public class HomeFragment extends BaseFragment {
         ArrayList<Prize> info = getParseData();
         if(info != null){
             mPrizeInfoList.addAll(info);
-            mMainDataAdapter.addAll(mPrizeInfoList);
+            mPrizeDataAdapter.addAll(mPrizeInfoList);
         }
     }
 

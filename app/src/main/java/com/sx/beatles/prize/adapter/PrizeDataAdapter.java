@@ -12,9 +12,9 @@ import com.sx.beatles.prize.bean.Prize;
 /**
  * Created by 施行 on 2017/8/1.
  */
-public class MainDataAdapter extends ListBaseAdapter<Prize> {
+public class PrizeDataAdapter extends ListBaseAdapter<Prize> {
     private Context mContext;
-    public MainDataAdapter(Context context) {
+    public PrizeDataAdapter(Context context) {
         super(context);
         mContext = context;
     }
